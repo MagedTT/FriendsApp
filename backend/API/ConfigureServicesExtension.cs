@@ -1,7 +1,12 @@
+using System.Text;
 using API.Data;
+using API.DTOs;
 using API.Interfaces;
 using API.Services;
+using backend.API.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace backend.API;
 
@@ -12,6 +17,21 @@ public static class ConfigureServicesExtension
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["TokenKey"] ?? throw new Exception("Token key not. found - Program.cs")))
+                };
+            });
 
         services.AddScoped<ITokenService, TokenService>();
 
@@ -34,5 +54,16 @@ public static class ConfigureServicesExtension
         });
 
         return services;
+    }
+
+    public static UserDTO toUserDTO(this ApplicationUser user, ITokenService tokenService)
+    {
+        return new UserDTO
+        {
+            Id = user.Id,
+            Name = user.Name,
+            Email = user.Email,
+            Token = tokenService.CreateToken(user)
+        };
     }
 }

@@ -3,6 +3,7 @@ using System.Text;
 using API.Data;
 using API.DTOs;
 using API.Interfaces;
+using backend.API;
 using backend.API.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -52,13 +53,7 @@ public class AccountController : ControllerBase
 
         await _context.SaveChangesAsync();
 
-        return Ok(new UserDTO
-        {
-            Id = user.Id,
-            Name = user.Name,
-            Email = user.Email,
-            Token = _tokenService.CreateToken(user)
-        });
+        return Ok(user.toUserDTO(_tokenService));
     }
 
     [HttpPost]
@@ -77,7 +72,12 @@ public class AccountController : ControllerBase
             return Unauthorized("Unauthorized");
         }
 
-        var hmac = new HMACSHA512(user.PasswordSalt!);
+        if (user.PasswordSalt is null)
+        {
+            return Unauthorized("Unauthorized");
+        }
+
+        var hmac = new HMACSHA512(user.PasswordSalt);
 
         var passwordHashed = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDTO.Password));
 
@@ -87,13 +87,7 @@ public class AccountController : ControllerBase
                 return Unauthorized("Invalid Password");
         }
 
-        return Ok(new UserDTO
-        {
-            Id = user.Id,
-            Name = user.Name,
-            Email = user.Email,
-            Token = _tokenService.CreateToken(user)
-        });
+        return Ok(user.toUserDTO(_tokenService));
     }
 
     private async Task<bool> EmailExists(string email)
