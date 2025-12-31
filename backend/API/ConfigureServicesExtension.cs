@@ -1,4 +1,6 @@
-using backend.API.Data;
+using API.Data;
+using API.Interfaces;
+using API.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.API;
@@ -10,6 +12,8 @@ public static class ConfigureServicesExtension
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+
+        services.AddScoped<ITokenService, TokenService>();
 
         services.AddCors(options =>
         {
@@ -25,7 +29,8 @@ public static class ConfigureServicesExtension
 
         services.AddDbContext<ApplicationDbContext>(options =>
         {
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            string connectionString = Environment.GetEnvironmentVariable("GetConnectionStrings__DefaultConnection")!;
+            options.UseSqlServer(connectionString ?? configuration.GetConnectionString("DefaultConnection"));
         });
 
         return services;

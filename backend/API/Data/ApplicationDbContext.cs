@@ -2,7 +2,7 @@ using System.Text.Json;
 using backend.API.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace backend.API.Data;
+namespace API.Data;
 
 public class ApplicationDbContext : DbContext
 {
