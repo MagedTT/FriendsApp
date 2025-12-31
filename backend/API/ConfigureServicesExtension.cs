@@ -11,6 +11,18 @@ public static class ConfigureServicesExtension
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
 
+        services.AddCors(options =>
+        {
+            options.AddPolicy("AngularCors", policy =>
+            {
+                policy
+                    .WithOrigins("https://localhost:4200")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+            });
+        });
+
         services.AddDbContext<ApplicationDbContext>(options =>
         {
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));

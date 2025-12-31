@@ -8,6 +8,8 @@ builder.Services.ConfigureServices(builder.Configuration);
 
 var app = builder.Build();
 
+app.UseCors("AngularCors");
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
