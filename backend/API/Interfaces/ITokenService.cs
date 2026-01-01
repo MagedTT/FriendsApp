@@ -1,4 +1,4 @@
-using backend.API.Entities;
+using API.Entities;
 
 namespace API.Interfaces;
 

@@ -1,7 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-using API.CustomValidators;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
-
 namespace API.DTOs;
 
 public class UserDTO

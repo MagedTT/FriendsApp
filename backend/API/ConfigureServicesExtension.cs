@@ -3,12 +3,12 @@ using API.Data;
 using API.DTOs;
 using API.Interfaces;
 using API.Services;
-using backend.API.Entities;
+using API.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
-namespace backend.API;
+namespace API;
 
 public static class ConfigureServicesExtension
 {
@@ -34,6 +34,7 @@ public static class ConfigureServicesExtension
             });
 
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IMemberRepository, MemberRepository>();
 
         services.AddCors(options =>
         {

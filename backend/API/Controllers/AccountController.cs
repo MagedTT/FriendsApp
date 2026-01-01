@@ -3,8 +3,7 @@ using System.Text;
 using API.Data;
 using API.DTOs;
 using API.Interfaces;
-using backend.API;
-using backend.API.Entities;
+using API.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -92,6 +91,6 @@ public class AccountController : ControllerBase
 
     private async Task<bool> EmailExists(string email)
     {
-        return _context.Users.Any(x => x.Email == email);
+        return await _context.Users.AnyAsync(x => x.Email == email);
     }
 }
