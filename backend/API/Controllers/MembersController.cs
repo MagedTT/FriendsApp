@@ -8,7 +8,7 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+// [Authorize]
 public class MembersController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
