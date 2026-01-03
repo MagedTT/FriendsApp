@@ -33,6 +33,7 @@ public class SeedData
                 Email = member.Email,
                 ImageUrl = member.ImageUrl,
                 PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes("Admin@123")),
+                PasswordSalt = hmac.Key,
                 Member = new Member
                 {
                     Id = member.Id,
