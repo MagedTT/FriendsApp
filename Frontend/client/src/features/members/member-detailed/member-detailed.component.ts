@@ -1,7 +1,10 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { filter } from 'rxjs';
+import { filter, Observable } from 'rxjs';
 import { Member } from '../../../types/Members';
+import { AccountService } from '../../../core/account.service';
+import { MemberService } from '../../../core/services/member.service';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-member-detailed',
@@ -11,16 +14,21 @@ import { Member } from '../../../types/Members';
 })
 export class MemberDetailedComponent implements OnInit {
   private route = inject(ActivatedRoute);
+  private accountService = inject(AccountService);
+  protected memberService = inject(MemberService);
   private router = inject(Router);
   // protected member$?: Observable<Member>;
-  protected member = signal<Member | undefined>(undefined);
+  // protected member = signal<Member | undefined>(undefined);
   protected title = signal<string | undefined>('Profile');
+  protected isCurrentUser = computed(() => {
+    return this.accountService.currentUser()?.id === this.route.snapshot.paramMap.get('id');
+  });
 
   ngOnInit(): void {
     // this.member$ = this.loadMember();
-    this.route.data.subscribe({
-      next: data => this.member.set(data['member'])
-    });
+    // this.route.data.subscribe({
+    //   next: data => this.member.set(data['member'])
+    // });
 
     this.title.set(this.route.firstChild?.snapshot?.title);
 
@@ -33,10 +41,10 @@ export class MemberDetailedComponent implements OnInit {
     });
   }
 
-  // loadMember() {
-  //   const id = this.route.snapshot.paramMap.get('id');
-  //   if (!id)
-  //     return;
-  //   return this.memberService.getMember(id);
-  // }
+  loadMember() {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (!id)
+      return;
+    return this.memberService.getMember(id);
+  }
 }

@@ -11,12 +11,19 @@ import { MemberCardComponent } from '../member-card/member-card.component';
   templateUrl: './member-list.component.html',
   styleUrl: './member-list.component.css'
 })
-export class MemberListComponent {
+export class MemberListComponent implements OnInit {
   private memberService = inject(MemberService);
+  protected members$?: Observable<Member[]>;
 
-  protected members$: Observable<Member[]>;
-
-  constructor() {
+  ngOnInit(): void {
     this.members$ = this.memberService.getMembers();
   }
 }
+
+// private memberService = inject(MemberService);
+
+//   protected members$: Observable<Member[]>;
+
+//   constructor() {
+//     this.members$ = this.memberService.getMembers();
+//   }
